@@ -14,6 +14,7 @@ function MyNotes() {
   const fetchNotes=async()=>{
     const {data}=await axios.
     get(`/api/notes`)
+    console.log(data);
     setNotes(data);
   }
   useEffect(()=>{

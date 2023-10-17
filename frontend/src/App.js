@@ -10,6 +10,8 @@ import Data from './components/Data';
 import MyNotes from './screens/MyNotes/MyNotes';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
+import LoginScreen from './screens/LoginScreen/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen/RegisterScreen';
 
 
 function App() {
@@ -17,7 +19,8 @@ function App() {
     createRoutesFromElements(
       <Route path='/' element={<Root />}>
         <Route index element={<Home />}/>
-        <Route path='/data' element={<Data />}/>
+        <Route path='/login' element={<LoginScreen />}/>
+        <Route path='/register' element={<RegisterScreen />}/>
         <Route path='/mynotes' element={<MyNotes />}/>
         
       </Route>
