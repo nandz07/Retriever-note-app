@@ -3,53 +3,29 @@ import MainScreen from '../../components/MainScreen'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import './LoginScreen.css'
-import axios from 'axios'
 import Loading from '../../components/Loading'
 import ErrorMessage from '../../components/ErrorMessage'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../actions/userActions'
 
 function LoginScreen({history}) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [err, setErr] = useState("")
-    const [loading, setLoading] = useState("")
     const navigate=useNavigate()
 
-    
+    const dispatch=useDispatch()
+
+    const userLogin=useSelector((state)=>state.userLogin)
+    const {loading,error,userInfo}=userLogin
 
     const submitHandler= async(e)=>{
         e.preventDefault()
-       try {
-        
-
-        const config={
-            headers:{
-                "Content-type":"application/json"
-            }
-        }
-        setLoading(true)
-        const {data}=await axios.post(
-            "/api/users/login",
-            {
-                email,
-                password
-            },
-            config
-        )
-        console.log(data);
-        localStorage.setItem("userInfo",JSON.stringify(data))
-        setLoading(false)
-        navigate("/");
-       } catch (error) {
-        // setErr(error.response.data.message)
-        setErr("invalid email or password")
-        alert(err)
-        setLoading(false)
-       }
+        dispatch(login(email, password));
     }
     return (
         <MainScreen title="LOGIN">
             <div className="logincontainer">
-                {err && <ErrorMessage variant='danger'>{err}</ErrorMessage>}
+                {error && <ErrorMessage variant='danger'>{error}</ErrorMessage>}
                 {loading && <Loading />}
                 <Form on onSubmit={submitHandler}>
                     <Form.Group controlId="formBasicEmail">
