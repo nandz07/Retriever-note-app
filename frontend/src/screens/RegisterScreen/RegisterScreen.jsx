@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import MainScreen from '../../components/MainScreen'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link ,useNavigate} from 'react-router-dom'
 import ErrorMessage from '../../components/ErrorMessage';
-import axios from 'axios';
 import Loading from '../../components/Loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../../actions/userActions';
+
 
 function RegisterScreen() {
     const [email, setEmail] = useState("");
@@ -16,41 +18,29 @@ function RegisterScreen() {
     const [confirmpassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState(null);
     const [picMessage, setPicMessage] = useState(null);
-    const [err, setErr] = useState(false);
-    const [loading, setLoading] = useState("")
+
+    const navigate=useNavigate()
+    const dispatch = useDispatch()
+
+    const useRegister = useSelector(state => state.useRegister)
+    // const { loading, error, userInfo } = useRegister
+
+    // useEffect(()=>{
+    //     if(userInfo){
+    //         navigate('/mynotes')
+    //     }
+    // },[navigate,userInfo])
 
     const submitHandler = async (e) => {
         e.preventDefault()
-        console.log(email);
-        if (password != confirmpassword) {
-            setMessage('Passwords do not match !')
-        } else {
-            setMessage(null)
-            try {
-                const config = {
-                    headers: {
-                        "Content-type": "application/json"
-                    }
-                }
-                setLoading(true)
-                const { data } = await axios.post(
-                    "/api/users",
-                    {
-                        name,
-                        pic,
-                        email,
-                        password
-                    },
-                    config
-                )
-                console.log(data);
-                localStorage.setItem("userInfo", JSON.stringify(data))
-                setLoading(false)
-            } catch (error) {
-                setErr(error.response.data.message)
-
-            }
+        if (password != confirmpassword){
+            setMessage('Password not match')
         }
+        else{
+            dispatch(register(name,email,password,pic))
+            navigate('/mynotes')
+        }
+        
     }
 
     const postDetails = (pics) => {
@@ -70,8 +60,8 @@ function RegisterScreen() {
                 console.log(data);
                 setPic(data.url.toString())
             }).catch((err) => {
-                    console.log(err);
-                })
+                console.log(err);
+            })
         } else {
             return setPicMessage('please select an image')
         }
@@ -79,9 +69,9 @@ function RegisterScreen() {
 
     return (<>
         <MainScreen title="REGISTER">
-            {err && <ErrorMessage variant="danger">{err}</ErrorMessage>}
+            {/* {error && <ErrorMessage variant="danger">{error}</ErrorMessage>} */}
             {message && <ErrorMessage variant="danger">{message}</ErrorMessage>}
-            {loading && <Loading />}
+            {/* {loading && <Loading />} */}
             <div className="logincontainer">
                 <Form onSubmit={submitHandler}>
                     <Form.Group controlId="name">
@@ -130,7 +120,7 @@ function RegisterScreen() {
                         <Form.Control
                             id="custom-file"
                             type="file"
-                            onChange={(e)=>postDetails(e.target.files[0])}
+                            onChange={(e) => postDetails(e.target.files[0])}
                         // isInvalid={!!errors.file}
                         />
                     </Form.Group>

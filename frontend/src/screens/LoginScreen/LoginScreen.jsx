@@ -18,6 +18,12 @@ function LoginScreen({history}) {
     const userLogin=useSelector((state)=>state.userLogin)
     const {loading,error,userInfo}=userLogin
 
+    useEffect(()=>{
+        if(userInfo){
+            navigate('/mynotes')
+        }
+    },[navigate,userInfo])
+
     const submitHandler= async(e)=>{
         e.preventDefault()
         dispatch(login(email, password));

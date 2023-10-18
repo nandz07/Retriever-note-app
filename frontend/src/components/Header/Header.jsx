@@ -1,9 +1,19 @@
 import React from 'react'
 import { Container, Form, Nav, NavDropdown, Navbar } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { logout } from '../../actions/userActions'
 
 function Header() {
   const navigate=useNavigate()
+  const dispatch=useDispatch()
+  const userLogin=useSelector(state=>state.userLogin)
+  const {userInfo}=userLogin
+
+  const logoutHandler=()=>{
+    dispatch(logout())
+    navigate('/')
+  }
   return (
     <>
     <Navbar expand="lg" bg='primary' expanded='lg' variant='dark' className="bg-body-tertiary">
@@ -37,10 +47,7 @@ function Header() {
             <NavDropdown title="Nandakumar" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">My profile</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item onClick={()=>{
-                localStorage.removeItem("userInfo")
-                navigate("/");
-              }}>
+              <NavDropdown.Item onClick={logoutHandler}>
                 Log out
               </NavDropdown.Item>
             </NavDropdown>
